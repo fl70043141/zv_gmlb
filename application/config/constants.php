@@ -15,6 +15,25 @@ defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);
 
 /*
 |--------------------------------------------------------------------------
+| FL INITIAL CONFIGS 
+|--------------------------------------------------------------------------
+|
+| If set to TRUE, a backtrace will be displayed along with php errors. If
+| error_reporting is disabled, the backtrace will not display, regardless
+| of this setting
+|
+*/
+define('SYSTEM_NAME', 'NVELOOP GEM LAB');
+define('SYSTEM_CODE', 'NV_GEM_LAB_DEV');
+define('SYSTEM_SHOTR_NAME', 'NV LABS');
+define('SYSTEM_POWERED_BY', 'Nveloop Solution');
+define('SYS_DATE_FORMAT', 'm/d/Y'); 
+define('SYS_EXP', '2019-06-30 23:58'); //jewelry only ->1
+
+
+define('REPORT_VER_URL', 'http://localhost/lgl_reports/report_sync/index.php/BglSync/');
+/*
+|--------------------------------------------------------------------------
 | File and Directory Modes
 |--------------------------------------------------------------------------
 |
@@ -41,7 +60,7 @@ defined('DIR_WRITE_MODE')  OR define('DIR_WRITE_MODE', 0755);
 |
 */
 
-define('REPNO_PREFIX',	'BGL'.date('ym').'-');
+define('REPNO_PREFIX',	'LGL'.date('ym'));
 
 /*
 |--------------------------------------------------------------------------

@@ -56,7 +56,7 @@
               function get_ri_sg(){
                   var var_drp_dwn= parseInt($('#variety').val()); 
                     $.ajax({
-                           url: "<?php echo site_url('reports/get_ri_sg_for_variety');?>",
+                           url: "<?php echo site_url($this->router->fetch_class().'/get_ri_sg_for_variety');?>",
                            type: 'post',
                            data : {drp_dwn_id: var_drp_dwn},
                            success: function(result){
@@ -69,7 +69,7 @@
               function get_variety_drpdwn(){
                   var idnfcn_id = parseInt($('#identification').val()); 
                     $.ajax({
-                           url: "<?php echo site_url('reports/get_dropdown_variety_data');?>",
+                           url: "<?php echo site_url($this->router->fetch_class().'/get_dropdown_variety_data');?>",
                            type: 'post',
                            data : {idnfcn_id: idnfcn_id},
                            success: function(result){
@@ -225,10 +225,10 @@ $result['sync_required'] =1;
                             
                             
                             <br>
-                            <?php echo form_open_multipart("reports/validate", 'id="form_report"'); ?> 
+                            <?php echo form_open_multipart($this->router->fetch_class()."/validate", 'id="form_report"'); ?> 
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-								&nbsp; <?php echo anchor(site_url('reports/add'),'Add New Report','class="btn btn-primary pull-right"');?>&nbsp;
+								&nbsp; <?php echo anchor(site_url($this->router->fetch_class().'/add'),'Add New Report','class="btn btn-primary pull-right"');?>&nbsp;
                                                                  &nbsp;  <a id="single_sync" class="btn hide btn-warning pull-right"><span class="fa fa-retweet"></span> Sync</a>&nbsp;
                                     <h3 class="panel-title"><strong><?=$action?></strong> BGL Report</h3>
                                 </div>
@@ -628,11 +628,11 @@ $result['sync_required'] =1;
 
                                     <?php echo anchor(site_url('reports'),'Back','class="btn btn-info"');?>&nbsp;
                                     <?php echo form_reset('reset','Reset','class = "btn btn-default"'); ?>
-                                    <?php echo anchor(site_url('reports/report_generate/'.$result['id']),'Generate Report','class="btn btn-warning '.$view_add.'"');?>&nbsp;
-                                    <div class="pull-right">    <?php echo anchor(site_url('reports/report_print/'.$result['id']),'View Report','class="btn btn-info   '.$view_add.' " target="_blank"');?>&nbsp;
-                                    <div class="pull-right">    <?php echo anchor(site_url('reports/report_print/'.$result['id'].'/1'),'View e-Report','class="btn btn-default   '.$view_add.' " target="_blank"');?>&nbsp;
-                                    <?php echo anchor(site_url('reports/report_print_pvc/'.$result['id']),'View Report PVC','class="btn btn-info    '.$view_add.' " target="_blank"');?>&nbsp;
-                                    <?php echo anchor(site_url('reports/add'),'New Report','class="btn btn-warning pull-right"');?>&nbsp;
+                                    <?php echo anchor(site_url($this->router->fetch_class().'/report_generate/'.$result['id']),'Generate Report','class="btn btn-warning '.$view_add.'"');?>&nbsp;
+                                    <div class="pull-right">    <?php echo anchor(site_url($this->router->fetch_class().'/report_print/'.$result['id']),'View Report','class="btn btn-info   '.$view_add.' " target="_blank"');?>&nbsp;
+                                    <div class="pull-right">    <?php echo anchor(site_url($this->router->fetch_class().'/report_print/'.$result['id'].'/1'),'View e-Report','class="btn btn-default hide  '.$view_add.' " target="_blank"');?>&nbsp;
+                                    <?php echo anchor(site_url($this->router->fetch_class().'/report_print_pvc/'.$result['id']),'View Report PVC','class="btn btn-info    '.$view_add.' " target="_blank"');?>&nbsp;
+                                    <?php echo anchor(site_url($this->router->fetch_class().'/add'),'New Report','class="btn btn-warning pull-right"');?>&nbsp;
                                     </div>
 
                                  <?php }else{ 

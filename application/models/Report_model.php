@@ -6,7 +6,7 @@ class Report_model extends CI_Model
             parent::__construct(); 
  	}
 	 
-         public function search_result($data=''){ 
+         public function search_result($data='',$limit=''){ 
 //             echo '<pre>';print_r($data); echo'<pre>';die;
              $part_query = '';
              if(isset($data['sync_pending']) && $data['sync_pending']==0){
@@ -29,6 +29,8 @@ class Report_model extends CI_Model
                 $this->db->like('report_no', $data['report_no']); 
             }
               
+            if($limit!='') $this->db->limit($limit); 
+           
             if(isset($data['status'])){
                 $this->db->where('status', $data['status']); 
             } 

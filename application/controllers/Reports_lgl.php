@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Reports extends CI_Controller {
+class Reports_lgl extends CI_Controller {
 
 	
         function __construct() {
@@ -15,7 +15,7 @@ class Reports extends CI_Controller {
 	}
         
         function view_search_report($datas=''){
-            $data['report_list'] = $this->Report_model->search_result();
+//            $data['report_list'] = $this->Report_model->search_result();
             $data['main_content']='reports/search_report'; 
             $this->load->view('includes/template',$data);
 	}
@@ -114,6 +114,7 @@ class Reports extends CI_Controller {
             if(!is_dir(LAB_REPORT_IMAGES.$report_no.'/')) mkdir(LAB_REPORT_IMAGES.$report_no.'/', 0777, TRUE);
             
             $this->create_qr($report_no); //Generate QR
+            $this->create_qr($report_no,'qr2'); //Generate QR 2 BG Blue
             $this->create_barcode($report_no); //Generate Barcode
             
             //Upload picture
@@ -182,13 +183,16 @@ class Reports extends CI_Controller {
                 } 
 	}
         
-        function create_qr($report_no){   
+        function create_qr($report_no,$qr_name='qr'){   
             //Generate QR Pic 
             $this->load->library('ciqrcode'); 
             $params['data'] = 'http://www.berberyngemlab.com/bgl_reports/verification/report_verifcation.php?repno='. base64_encode($report_no);
             $params['level'] = 'H';
             $params['size'] = 10;
-            $params['savename'] = LAB_REPORT_IMAGES.$report_no.'/qr.png';
+            if($qr_name!='qr')
+                $params['black'] = array(33,78,137);
+//            $params['white'] = array(255,255,255);
+            $params['savename'] = LAB_REPORT_IMAGES.$report_no.'/'.$qr_name.'.png';
             $this->ciqrcode->generate($params);
             
             
@@ -219,6 +223,7 @@ class Reports extends CI_Controller {
             
             
             $this->create_qr($report_no); //Generate QR
+            $this->create_qr($report_no,'qr2'); //Generate QR 2 BG Blue
             $this->create_barcode($report_no); //Generate Barcode
 
               $data = array( 
@@ -281,7 +286,7 @@ class Reports extends CI_Controller {
             if($edit_stat){
                 $this->Report_model->edit_report($inputs['id'],array('sync_required' => $inputs['sync_required']));
                 $this->session->set_flashdata('warn',RECORD_UPDATE);
-                redirect('reports/edit/'.$inputs['id']);
+                redirect('reports_lgl/edit/'.$inputs['id']);
             }else{
                 $this->session->set_flashdata('warn',ERROR);
                 redirect('reports');
@@ -351,10 +356,18 @@ class Reports extends CI_Controller {
         
         function search_report(){ 
                 $status = $this->input->post('status'); 
-                
+                $inputs = $this->input->post();
+//                echo '<pre>'; print_r($inputs); die;
 		$search_data=array( 'report_no' => $this->input->post('report_no'),  
-                                    'status' => ($status!='')?1:0); 
-		$data_view['search_list'] = $this->Report_model->search_result($search_data);
+                                    'status' => ($status!='')?1:0,
+                                    'sync_pending' => ($this->input->post('sync_pending')!='')?0:1, 
+                                    ); 
+                $limit='';
+                if(isset($inputs['ignore_limit']) && $inputs['limit']>0 ){
+                    $limit = $inputs['limit'];
+                }
+                    
+		$data_view['search_list'] = $this->Report_model->search_result($search_data,$limit);
                                         
 		$this->load->view('reports/search_report_result',$data_view);
 	}
@@ -413,7 +426,7 @@ class Reports extends CI_Controller {
             }
             $color_dist_htm = ($report_data['show_color_distribution']==1)?$color_type_htm:$appendix_htm;
             
-            $qr_path = base_url().LAB_REPORT_IMAGES.$report_data['report_no'].'/qr.png';
+            $qr_path = base_url().LAB_REPORT_IMAGES.$report_data['report_no'].'/qr2.png';
             //load library
             $this->load->library('Pdf');
             $pdf = new Pdf('L', 'mm', array('85.6','54'), true, 'UTF-8', false);
@@ -428,9 +441,10 @@ class Reports extends CI_Controller {
                     
             // ---------------------------------------------------------
             $pdf->SetDisplayMode('fullpage', 'SinglePage', 'UseNone');
-            $pdf->SetFont('helveticaB','',7);  // set font 
             $pdf->AddPage('L',array('85.6','54'));
-
+            
+            //set bg color blue
+            $pdf->Rect(0, 0, $pdf->getPageWidth(),    $pdf->getPageHeight(), 'DF', array('all' => array('width' => 0)),  array(33, 78, 137));
 //            $pdf->Line(1, 1, 85, 1);
 //            $pdf->Line(1, 1, 1, 53);
             
@@ -438,9 +452,15 @@ class Reports extends CI_Controller {
                     <table border="0">
                         <tr>
                             <td width="75%">
-                                <table style="padding-left:3px;">
+                                <table style="padding-left:3px;color:white;line-height:15px;">
+                                     <tr><td colspan="3" style="font-size:3px;"></td></tr>
                                     <tr style="font-weight: bold;">
-                                        <td width="27%">Report No</td>
+                                        <td width="30%">Date</td>
+                                        <td width="5%">:</td>
+                                        <td width="78%">'.date("dS M Y",strtotime($report_data['report_date'])).'</td>
+                                    </tr>
+                                    <tr style="font-weight: bold;">
+                                        <td width="30%">Report No</td>
                                         <td width="5%">:</td>
                                         <td width="78%">'.$report_data['report_no'].'</td>
                                     </tr>
@@ -451,7 +471,12 @@ class Reports extends CI_Controller {
                                         <td>'.$report_data['weight'].' carat</td>
                                     </tr>
                                      <tr>
-                                        <td>Shape & Cut</td>
+                                        <td>Color </td>
+                                        <td>:</td>
+                                        <td>'.$report_data['color'].'</td>
+                                    </tr>
+                                     <tr>
+                                        <td>Shape</td>
                                         <td>:</td>
                                         <td>'.$report_data['shape_val'].' '.$report_data['cut_val'].'</td>
                                     </tr>
@@ -461,26 +486,9 @@ class Reports extends CI_Controller {
                                         <td>'.$report_data['dimension'].' mm</td>
                                     </tr>
                                      <tr>
-                                        <td>Colour </td>
+                                        <td>Identification </td>
                                         <td>:</td>
-                                        <td>'.$report_data['color'].'</td>
-                                    </tr>
-                                    <tr><td colspan="3" style="font-size:3px;"></td></tr>
-                                    <tr style="font-weight: bold; color:#AC8A1D;">
-                                        <td>SPECIES </td>
-                                        <td>:</td>
-                                        <td>'.strtoupper($report_data['identification_val']).'</td>
-                                    </tr>
-                                    <tr style="font-weight: bold; color:#AC8A1D;">
-                                        <td>VARIETY </td>
-                                        <td>:</td>
-                                        <td>'.strtoupper($report_data['variety_val']).'</td>
-                                    </tr>
-                                    <tr><td colspan="3" style="font-size:3px;"></td></tr> 
-                                    <tr>
-                                        <td>Comments</td>
-                                        <td>:</td>
-                                        <td>'.$report_data['comments'].'</td>
+                                        <td>'.($report_data['variety_val']).'</td>
                                     </tr>
                                     '.$color_dist_htm.'
                                 </table>
@@ -488,7 +496,7 @@ class Reports extends CI_Controller {
 
                             <td align="center" width="25%">
                                 <table>
-                                    <tr><td><b>&nbsp;'.date("dS M Y",strtotime($report_data['report_date'])).'</b></td></tr> 
+                                    <tr><td></td></tr> 
                                     <tr><td height="5px;"></td></tr>
                                      <tr><td height="5px;"></td></tr>
                                 
@@ -497,25 +505,33 @@ class Reports extends CI_Controller {
                         </tr>
                     </table>';
             
-                    
-                $htm1_headerTexts = '<p style="font-size:8px; color:white;"><b>BGL - Gemstone Identification Report</b></p>';
-                $pdf->SetFillColor(172,138,29);
-                 $pdf->writeHTMLCell(85.6, 1, 0, 13, '',0,0,TRUE); 
-                 $pdf->writeHTMLCell(85.6, 1, 22, 13,$htm1_headerTexts); 
-
-                $pdf->SetFillColor(200,0,0);
+                $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/HTOWERT.TTF', 'TrueTypeUnicode', '', 96);
+                // use the font
+                $pdf->SetFont($fontname, '', 15.5, '', false);
+                $htm1_headerTexts = '<p style="font-size:10.5px; color:white;"><b>GEMSTONE BRIEF REPORT</b></p>'; 
+                $pdf->writeHTMLCell(85.6, 1, 30,8,$htm1_headerTexts); 
+                
+                $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/himalaya.ttf', 'TrueTypeUnicode', '', 96);
+                $pdf->SetFont($fontname,'',12);  // set font 
+                $pdf->SetFillColor(255,355,255);
                 /* $pdf->writeHTMLCell(45, 17, 20, 0, '',0,0,TRUE); */
 
                 $pdf->writeHTMLCell(85, 37, 0, 17, $html1); 
-                $pdf->Image(base_url().'templates/img/gol_FL_LOGO.png',21,1.5,45,10,'PNG'); 
                 
+                
+                
+                
+                //logo lines  
+                $pdf->Rect(0, 6.25, 85.6,0.25 , 'DF', array('all' => array('width' => 0)),  array(255, 255, 255));
+                $pdf->Image(base_url().'storage/images/company/lgl_header_logo.png',5.5,2.5,14.5,12.5,'PNG'); 
                 //QR corner
 //                $pdf->Image($qr_path,72,41,11,11,'PNG'); 
                 //QR default
-                $pdf->Image($qr_path,69.5,38,15,15,'PNG'); 
+                $pdf->Image($qr_path,63.5,38,15,15,'PNG'); 
                 
                 //stone pic default
-                $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],67.5,21,17.5,17.5); 
+                $pdf->Rect(61, 16.5, 20,20 , 'DF', array('all' => array('width' => 0.5,'color' => array(25, 51, 100))),  array(33, 78, 137));
+                $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],63,18.5,16,16); 
 
                     
                     //Close and output PDF document
@@ -524,6 +540,7 @@ class Reports extends CI_Controller {
 //                    rename(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'.pdf', BASEPATH.'.'.LAB_REPORT_PVC_PDF_TRASH.$report_data['report_no'].'_'.time().'.pdf'); 
     //                unlink(BASEPATH.'.'.LAB_REPORT_PDF.$report_data['report_no'].'.pdf');
                 }
+//                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'I'); 
                     $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'F');
 //                    echo '<pre>';                    print_r($pdf_output); die;
                     $this->session->set_flashdata('warn','The PVC report data generated.');
@@ -564,26 +581,41 @@ class Reports extends CI_Controller {
             
             //hide Data
             $col_ditr = ' <tr>
-                                <td width="28%" align="left"><b>Colour Type:</b></td>
-                                <td width="1%" align="center"></td>
-                                <td width="78%">'.$report_data['color_distribution_val'].'</td>
+                                <td width="26%" align="right">Colour Type :</td>
+                                <td width="5%" align="center"></td>
+                                <td width="80%">'.$report_data['color_distribution_val'].'</td>
                             </tr>';
             
             //appendix instead of color_type or color distribution
 			$appendix ='';
             if($report_data['appendix'] !=''){
                 $appendix= ' <tr>
-                                    <td width="28%" align="left"><b>Appendix:</b></td>
-                                    <td width="1%" align="center"></td>
+                                    <td width="26%" align="right">Appendix :</td>
+                                    <td width="5%" align="center"></td>
                                     <td width="78%">'.$report_data['appendix'].'</td>
+                            </tr>';
+            }
+			//Origin left side 
+			$origin_left='';
+            if($report_data['show_origin']==1){
+                $origin_left= ' <tr>
+                                    <td width="26%" align="right">Origin :</td>
+                                    <td width="5%" align="center"></td>
+                                    <td style="" width="80%">Gemmological testing revealed charecteristics corresponding to those '.$report_data['identification_val'].' from <b>'.$report_data['country_name'].'</b></td>
+                            </tr>
+							<tr><td colspan="3"></td></tr>
+							<tr>
+                                    <td width="26%" align="right"></td>
+                                    <td width="5%" align="center"></td>
+                                    <td width="80%">Any statement on geographic origin is an expert opinion based on a collection of observations and analytical data.</td>
                             </tr>';
             }
             //Phenomonon instead of color_type or color distribution
 			$phenomonon='';
             if($report_data['phenomonon'] !=''){
                 $phenomonon= ' <tr>
-                                    <td width="28%" align="left">Phenomonon:</td>
-                                    <td width="1%" align="center"></td>
+                                    <td width="26%" align="right">Phenomenon :</td>
+                                    <td width="5%" align="center"></td>
                                     <td width="78%">'.$report_data['phenomonon'].'</td>
                             </tr>';
             }
@@ -591,8 +623,8 @@ class Reports extends CI_Controller {
 			$treatment = '';
             if($report_data['treatment'] !=''){
                 $treatment= ' <tr>
-                                    <td width="28%" align="left">:'.strtoupper('Treatment').':</b></td>
-                                    <td width="1%" align="center"></td>
+                                    <td width="26%" align="right"> :'.strtoupper('Treatment').':</td>
+                                    <td width="5%" align="center"></td>
                                     <td width="78%">'.$report_data['treatment'].'</td>
                             </tr>';
             }
@@ -602,31 +634,40 @@ class Reports extends CI_Controller {
                                 <td height="160px"></td>
                             </tr>
                             <tr>
-                                <td height="30px" colspan="2" style="text-align:center;font-size:18px;"><b>'.strtoupper($report_data['variety_val']).'</b></td>
-                            </tr>
+                                <td height="30px" colspan="2" style="letter-spacing:3px;text-align:center;font-size:15px;"><b>Remarks</b></td>
+                            </tr>  
+							<tr>
+                                <td height="20px" colspan="2" style="letter-spacing:0.5px;line-height:0px;text-align:center;font-size:13px;">'.$report_data['comments'].'</td>
+                            </tr> 
                             <tr>
-                                <td width="90%" style="font-size:18px;"><b>Origin</b></td>
+                                <td width="90%" style="font-size:15px;"><b>Origin</b></td>
                                 <td width="10%"></td>
                             </tr>
                             <tr>
-                                <td colspan="2" style="text-align:justify;font-size:14px;">Gemmological testing revealed charecteristics corresponding to those '.$report_data['identification_val'].' from:</td>
+                                <td colspan="2" style="line-height:120%;text-align:justify;font-size:13px;">Gemmological testing revealed charecteristics corresponding to those '.$report_data['identification_val'].' from:</td>
                                 
                             </tr> 
                             <tr>
-                                <td colspan="2"  align="center" style="font-size:17px; line-height: 25px;"><b>'.$report_data['country_name'].'</b></td>
+                                <td colspan="2"  align="center" style="font-size:15px; line-height: 25px;"><b>'.$report_data['country_name'].'</b></td>
                                 
                             </tr>
                         </table>';
             $origin2 = '<table border="0">
                             <tr>
-                                <td height="160px"></td>
+                                <td colspan="2" height="0px"></td>
                             </tr>
                             <tr>
-                                <td height="30px" colspan="2" style="text-align:center;font-size:18px;">'.strtoupper($report_data['variety_val']).'</td>
-                            </tr> 
+                                <td width="96%" height="30px"  style="letter-spacing:0px;text-align:center;font-size:20px;">Remarks</td>
+                                <td width="4%" ></td>
+                            </tr>  
+                            <tr>
+                                <td width="96%" style="line-height:120%;text-align:center;font-size:13px;">'.$report_data['comments'].'</td>
+                                <td width="4%" ></td>
+                            </tr>  
                         </table>';
             $show_color_distribution = ($report_data['show_color_distribution']==1)?$col_ditr:$appendix;
-            $show_origin = ($report_data['show_origin']==1)?$origin:$origin2;
+            // $show_origin = ($report_data['show_origin']==1)?$origin:$origin2;
+            $show_origin = ($report_data['show_origin']==1)?$origin2:$origin2;
             
             $logo_path = base_url().COMPANY_LOGO.'logo_1.png';
             $qr_path = base_url().LAB_REPORT_IMAGES.$report_data['report_no'].'/qr.png';
@@ -683,118 +724,113 @@ class Reports extends CI_Controller {
 
             // $pdf->AddPage('L', 'A4');
 			
-            $pdf->AddPage('L',array('287','195'));
+            $pdf->AddPage('L',array('210','215'));
+            
+            $pdf->Image(COMPANY_LOGO.'report-test.jpg',0,0,'215','215');  //Temp bg
+                    
+            $pdf->Line(107.5, 0, 107.5, 210);
 //            $pdf->Cell(0, 0, 'A4 LANDSCAPE', 1, 1, 'C'); 
             // define some HTML content with style
 $html = '
 <!-- EXAMPLE OF CSS STYLE -->
 <style>
    #report_content, th, td {
-    font-size:13px;
+    font-size:15.5px;
     height: 17px; 
-    line-height: 15px;
+    line-height: 25px;
 }
 </style>
  
 <br />
 
-<table  class="first" border="0" cellpadding="4" cellspacing="6">
+<table  class="first" border="0" cellpadding="0" cellspacing="6">
         <tr>
             <td width="50%">
                     <table border="0">
-                        <tr><td  height="70px"  align="center"> 
+                        <tr><td  height="165px"  align="center"> 
                               <!--  <img style="width:250px; size:100%" src="$logo_path"> -->
                             </td></tr> 
                         <tr><td align="center"></td></tr> 
                         <tr><td align="center"><H2></H2></td></tr> 
-                    
-                        <tr><td></td></tr>
+                     
                         <tr>
                             <td>
                                 <table width="425px" border="0" id="report_content">
-                                  
-                                    <tr>
-                                        <td width="28%" align="left"><b>Report No:</b></td>
-                                        <td width="1%" align="center"></td>
-                                        <td width="78%"><b>'.$report_data['report_no'].'</b></td>
-                                    </tr>
                                     <tr>
                                         <td colspan="3"></td>
                                     </tr>
                                     <tr>
-                                        <td width="28%" align="left">Date:</td>
-                                        <td width="1%" align="center"></td>
+                                        <td width="26%" align="left">Date </td>
+                                        <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['report_date'].'</td>
                                     </tr>
                                     <tr>
-                                        <td width="28%" align="left">Item:</td>
-                                        <td width="1%" align="center"></td>
-                                        <td width="78%">'.$report_data['object_val'].'</td>
+                                        <td width="26%" align="left">Report No </td>
+                                        <td width="5%" align="center">:</td>
+                                        <td width="78%">'.$report_data['report_no'].'</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="26%" align="left">Ref No </td>
+                                        <td width="5%" align="center">:</td>
+                                        <td width="78%">'.$report_data['report_no'].'</td>
                                     </tr>
                                     <tr>
                                         <td colspan="3"></td>
                                     </tr>
                                     <tr>
-                                        <td width="28%" align="left">Weight:</td>
-                                        <td width="1%" align="center"></td>
-                                        <td width="78%">'.$report_data['weight'].' carat</td>
+                                        <td width="26%" align="left">Weight </td>
+                                        <td width="5%" align="center">:</td>
+                                        <td width="78%">'.$report_data['weight'].' ct</td>
                                     </tr>
                                     <tr>
-                                        <td width="28%" align="left">Measurement:</td>
-                                        <td width="1%" align="center"></td>
-                                        <td width="78%">'.$report_data['dimension'].' mm</td>
+                                        <td width="26%" align="left">Color </td>
+                                        <td width="5%" align="center">:</td>
+                                        <td width="78%">'.$report_data['color'].'</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3"></td>
-                                    </tr>
-                                    <tr>
-                                        <td width="28%" align="left">Shape:</td>
-                                        <td width="1%" align="center"></td>
+                                        <td width="26%" align="left">Shape </td>
+                                        <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['shape_val'].'</td>
                                     </tr>
                                     <tr>
-                                        <td width="28%" align="left">Cut:</td>
-                                        <td width="1%" align="center"></td>
+                                        <td width="26%" align="left">Cut </td>
+                                        <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['cut_val'].'</td>
                                     </tr> 
                                     <tr>
-                                        <td width="28%" align="left">Transperancy:</td>
-                                        <td width="1%" align="center"></td>
+                                        <td width="26%" align="left">Dimension </td>
+                                        <td width="5%" align="center">:</td>
+                                        <td width="78%">'.$report_data['dimension'].' mm</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="26%" align="left">Transperancy </td>
+                                        <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['transparency'].'</td>
                                     </tr>
                                     <tr>
-                                        <td width="28%" align="left">Colour:</td>
-                                        <td width="1%" align="center"></td>
-                                        <td width="78%">'.$report_data['color'].'</td>
+                                        <td colspan="3"></td>
+                                    </tr> 
+                                    <tr>
+                                        <td colspan="3"><b>Conclusion</b></td>
                                     </tr>
-									
-                                   '.$show_color_distribution.'
-									'.$phenomonon.'
+                                    <tr>
+                                        <td width="26%" align="left">Species </td>
+                                        <td width="5%" align="center">:</td>
+                                        <td width="78%">'.$report_data['object_val'].'</td>
+                                    </tr> 
+                                    <tr>
+                                        <td width="26%" align="left">Variety </td>
+                                        <td width="5%" align="center">:</td>
+                                        <td width="78%">'.$report_data['variety_val'].'</td>
+                                    </tr> 
                                     
                                     <tr>
-                                        <td colspan="3"></td>
+                                        <td style="line-height:30px;" colspan="3"></td>
                                     </tr>
-                                    <tr>
-                                        <td width="28%" align="left"><b>VARIETY:</b></td>
-                                        <td width="1%" align="center"></td>
-                                        <td style="color:;" width="78%"><b>'.strtoupper($report_data['variety_val']).'</b></td>
-                                    </tr>
-                                    <tr>
-                                        <td width="28%" align="left"><b>SPECIES:</b></td>
-                                        <td width="1%" align="center"></td>
-                                        <td style="color:;" width="78%"><b>'.strtoupper($report_data['identification_val']).'</b></td>
-                                    </tr>
+                                       
                                     <tr>
                                         <td colspan="3"></td>
-                                    </tr>
-                                    <tr>
-                                        <td width="28%" align="left"><b>COMMENTS:</b></td>
-                                        <td width="1%" align="center"></td>
-                                        <td width="78%"></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align:justify;" colspan="3">'.$report_data['comments'].'</td>
-                                    </tr>
+                                    </tr> 
                                     <tr>
                                         <td colspan="3"></td>
                                     </tr>
@@ -807,8 +843,8 @@ $html = '
                         </tr>
                     </table>
             </td>
-            <td width="3%"></td>
-            <td width="48%">
+             
+            <td width="50%">
                     '.$show_origin.'
             </td>
         
@@ -825,11 +861,7 @@ $html2 = <<<EOF
                 <table border="0">
                     <tr>
                         <td height="24px;"></td>
-                    </tr>
-                    <tr>
-                        <td width="100%" align="right"><img style="width:136px; size=100%;" src="$barcode_path"></td>
-                        <td width="5%"></td>
-                    </tr>
+                    </tr> 
                 </table>
             </td>
         </tr>
@@ -838,14 +870,16 @@ EOF;
 
 //            echo '<pre>';            print_r($report_data); die;
 
-$html3 = "Varify this report at www.berberyngemlab.com <br> or <b>scan QR code</b>";
+$html3 = "Scan the QR & verify this report here.";
 if($bg==true){ 
     $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],205,13,33,''); 
 }
 // output the HTML content
-$pdf->writeHTMLCell(277, 160, 8, 16, $html);
-$pdf->writeHTMLCell(140, 10, 8, 172, $html2);
-$pdf->writeHTMLCell(140, 10, 35,172, $html3); 
+$pdf->writeHTMLCell(215, 160, 2, 0, $html);
+$pdf->writeHTMLCell(138, 10, 7, 182, $html2);
+$pdf->SetFontSize(10.5);
+$pdf->writeHTMLCell(138, 10, 33,190, $html3); 
+//$pdf->Image(LAB_REPORT_IMAGES.'../other/arrow.png',153,65,18,''); 
 
 $report_path = ($bg==true)?LAB_E_REPORT_PDF:LAB_REPORT_PDF;
 //echo $report_path; die;    
@@ -855,12 +889,13 @@ $report_path = ($bg==true)?LAB_E_REPORT_PDF:LAB_REPORT_PDF;
                 rename(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', BASEPATH.'.'.LAB_REPORT_PDF_TRASH.$report_data['report_no'].'_'.time().'.pdf'); 
 //                unlink(BASEPATH.'.'.LAB_REPORT_PDF.$report_data['report_no'].'.pdf');
             } 
-            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'F');
+            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'I');
+            die;
             
             $this->a4_report_generate_2($report_data['id']);
             $this->session->set_flashdata('warn','The report data generated.');
                     
-            redirect(base_url().'reports/edit/'.$report_data['id']);
+            redirect(base_url().'reports_lgl/edit/'.$report_data['id']);
 
 //            echo gen_id(REPNO_PREFIX, LAB_REPORT, 'id');
 //            echo BASEPATH.'../'.LAB_REPORT_PDF;
@@ -892,7 +927,7 @@ $report_path = ($bg==true)?LAB_E_REPORT_PDF:LAB_REPORT_PDF;
 			$phenomonon='';
             if($report_data['phenomonon'] !=''){
                 $phenomonon= ' <tr>
-                                    <td width="28%" align="left">Phenomonon:</td>
+                                    <td width="28%" align="left">Phenomenon:</td>
                                     <td width="1%" align="center"></td>
                                     <td width="78%">'.$report_data['phenomonon'].'</td>
                             </tr>';
@@ -1149,9 +1184,9 @@ EOF;
 
 //            echo '<pre>';            print_r($report_data); die;
 
-$html3 = "Varify this report at www.berberyngemlab.com <br> or <b>scan QR code</b>";
+$html3 = "Verify this report at www.berberyngemlab.com <br> or <b>scan QR code</b>";
 if($bg==true){ 
-    $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],194.5,12.3	5,32,''); 
+    // $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],194.5,12.3	5,32,''); 
 }
 // output the HTML content
 $pdf->writeHTMLCell(277, 160, 3, 16, $html);
@@ -1173,7 +1208,7 @@ $report_path = ($bg==true)?LAB_E_REPORT_PDF:LAB_REPORT_PDF;
                     
             $this->session->set_flashdata('warn','The report data generated.');
                     
-            redirect(base_url().'reports/edit/'.$report_data['id']);
+            redirect(base_url().'reports_lgl/edit/'.$report_data['id']);
 
 //            echo gen_id(REPNO_PREFIX, LAB_REPORT, 'id');
 //            echo BASEPATH.'../'.LAB_REPORT_PDF;

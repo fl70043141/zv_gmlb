@@ -30,9 +30,9 @@
                 <td>'.$row['shape_val'].'</td> 
                 <td> '.(($row['remote_sync_status']==0)?'<span style="color:red;">required</span>':'<span style="color:green;">Synced</span>').'  </td> 
                 <td>
-                    <a href="'.  base_url('reports/view/'.$row['id']).'"><span class="fa fa-eye"></span></a> |
-                    <a href="'.  base_url('reports/edit/'.$row['id']).'"><span class="fa fa-pencil"></span></a> |
-                    <a href="'.  base_url('reports/delete/'.$row['id']).'"><span class="fa fa-trash"></span></a>   
+                    <a href="'.  base_url($this->router->fetch_class().'/view/'.$row['id']).'"><span class="fa fa-eye"></span></a> |
+                    <a href="'.  base_url($this->router->fetch_class().'/edit/'.$row['id']).'"><span class="fa fa-pencil"></span></a> |
+                    <a href="'.  base_url($this->router->fetch_class().'/delete/'.$row['id']).'"><span class="fa fa-trash"></span></a>   
                 </td>  ';
         $i++;
          }

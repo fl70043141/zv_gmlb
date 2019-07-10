@@ -351,12 +351,18 @@ class Reports extends CI_Controller {
         
         function search_report(){ 
                 $status = $this->input->post('status'); 
-                
+                $inputs = $this->input->post();
+//                echo '<pre>'; print_r($inputs); die;
 		$search_data=array( 'report_no' => $this->input->post('report_no'),  
                                     'status' => ($status!='')?1:0,
-                                    'sync_pending' => ($this->input->post('sync_pending')!='')?0:1
+                                    'sync_pending' => ($this->input->post('sync_pending')!='')?0:1, 
                                     ); 
-		$data_view['search_list'] = $this->Report_model->search_result($search_data);
+                $limit='';
+                if(isset($inputs['ignore_limit']) && $inputs['limit']>0 ){
+                    $limit = $inputs['limit'];
+                }
+                    
+		$data_view['search_list'] = $this->Report_model->search_result($search_data,$limit);
                                         
 		$this->load->view('reports/search_report_result',$data_view);
 	}

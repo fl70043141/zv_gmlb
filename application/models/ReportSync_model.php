@@ -123,12 +123,13 @@ class ReportSync_model extends CI_Model
      * IF IT IS IN REMOTE SERVER --> $url = "http://BGL.com/interface/punch/a.php";
      */    
     
-//    private $url = "http://localhost/bgl_remote/BglSync/";
+    private $url = '';
      // private $url = "http://berberyngemlab.com/bgl_reports/test_report_sync/BglSync/";
-   private $url = "http://berberyngemlab.com/bgl_reports/report_sync/BglSync/";
+//   private $url = "http://berberyngemlab.com/bgl_reports/report_sync/BglSync/";
   
     public function postToRemoteServer($post_sub_array=array('fahry'=>1991))
     {
+        $this->url = REPORT_VER_URL;
         $this->curl->create($this->url);
         
         $encrypted_post_data = mc_encrypt($post_sub_array, ENCRYPTION_KEY);
@@ -139,7 +140,7 @@ class ReportSync_model extends CI_Model
         $this->curl->post($post_data);    
         //Execute - returns responce
         $result = $this->curl->execute();  
-       // echo '<pre>';        print_r($result);
+//        echo '<pre>';        print_r($result);
 //        echo '<img src="data:image/gif;base64,'.$result.'">'; die; 
          
         return $result; 

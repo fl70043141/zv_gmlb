@@ -301,7 +301,7 @@ endswitch;
                                                              <?php echo form_input(array('name'=>'logo', 'id'=>'logo', 'class'=>'form-control', 'type'=>'file'));?>
 								
                                                         </div>    
-                                                        <div><img style="size: 100%; width:100px;"  src="<?php echo base_url().HOTEL_LOGO.$result['logo'];?>"></div>
+                                                        <div><img style="size: 100%; width:100px;"  src="<?php echo base_url().COMPANY_LOGO.$result['logo'];?>"></div>
                                                         <span class="help-block"><?php echo form_error('logo');?></span>
                                                     </div>
                                                 </div>

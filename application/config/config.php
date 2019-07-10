@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] =  "http://".$_SERVER['HTTP_HOST'].'/bgl_system/';
+$config['base_url'] =  "http://".$_SERVER['HTTP_HOST'].'/zv_gemlab/';
 date_default_timezone_set('Asia/Colombo');
 /*
 |--------------------------------------------------------------------------

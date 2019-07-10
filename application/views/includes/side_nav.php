@@ -11,7 +11,7 @@
                 <ul class="x-navigation">
                     
                                <li class="xn-logo">
-                                   <a href="index.html">BGL SYSTEM</a>
+                                   <a href="index.html"><?php echo SYSTEM_SHOTR_NAME;?></a>
                                    <a href="#" class="x-navigation-control"></a>
                                </li>
 

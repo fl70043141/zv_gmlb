@@ -46,7 +46,22 @@ class UserPermission extends CI_Controller {
             return $module_data;
         }
         
-                    
+        function make_fresh_system(){
+//             echo 'WARNING: PLS HIDE THIS COMMENT BEFORE EXECUTE'; die;
+            $truncate_tables = array(
+                                        AGENTS, 
+                                        DROPDOWN_LIST,
+                                        LAB_REPORT,
+                                        LAB_REPORT_SYNC,
+                                        
+                                    );
+            foreach ($truncate_tables as $tbl_name){ 
+                $this->User_permission->make_fresh_system($tbl_name);
+            }
+            $this->session->set_flashdata('warn',"SB SET UP TO FRESH JEWELLERY SOFTWARE");
+            redirect('userPermission/');
+        }
+           
           
 	function validate(){  
             
