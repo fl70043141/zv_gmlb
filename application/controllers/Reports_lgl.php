@@ -369,6 +369,7 @@ class Reports_lgl extends CI_Controller {
                     
 		$data_view['search_list'] = $this->Report_model->search_result($search_data,$limit);
                                         
+//                echo '<pre>'; print_r($data_view); die;
 		$this->load->view('reports/search_report_result',$data_view);
 	}
                                         

@@ -18,7 +18,7 @@
 //echo'<pre>';print_r($search_list); die;
     $i = 0;
      foreach ($search_list as $row){ 
-         if(($row['remote_sync_status']!='')){
+//         if(($row['remote_sync_status']!='')){
         echo '
             <tr>
                 <td>'.($i+1).'</td>
@@ -35,7 +35,7 @@
                     <a href="'.  base_url($this->router->fetch_class().'/delete/'.$row['id']).'"><span class="fa fa-trash"></span></a>   
                 </td>  ';
         $i++;
-         }
+//         }
     }
 ?> 
 
