@@ -186,7 +186,7 @@ class Reports_lgl extends CI_Controller {
         function create_qr($report_no,$qr_name='qr'){   
             //Generate QR Pic 
             $this->load->library('ciqrcode'); 
-            $params['data'] = 'http://www.berberyngemlab.com/bgl_reports/verification/report_verifcation.php?repno='. base64_encode($report_no);
+            $params['data'] = REPORT_VER_URL.'verification/report_verifcation.php?repno='. base64_encode($report_no);
             $params['level'] = 'H';
             $params['size'] = 10;
             if($qr_name!='qr')
@@ -726,9 +726,9 @@ class Reports_lgl extends CI_Controller {
 			
             $pdf->AddPage('L',array('210','215'));
             
-            $pdf->Image(COMPANY_LOGO.'report-test.jpg',0,0,'215','215');  //Temp bg
+//            $pdf->Image(COMPANY_LOGO.'report-test.jpg',0,0,'215','215');  //Temp bg
                     
-            $pdf->Line(107.5, 0, 107.5, 210);
+//            $pdf->Line(107.5, 0, 107.5, 210);
 //            $pdf->Cell(0, 0, 'A4 LANDSCAPE', 1, 1, 'C'); 
             // define some HTML content with style
 $html = '
@@ -889,8 +889,8 @@ $report_path = ($bg==true)?LAB_E_REPORT_PDF:LAB_REPORT_PDF;
                 rename(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', BASEPATH.'.'.LAB_REPORT_PDF_TRASH.$report_data['report_no'].'_'.time().'.pdf'); 
 //                unlink(BASEPATH.'.'.LAB_REPORT_PDF.$report_data['report_no'].'.pdf');
             } 
-            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'I');
-            die;
+            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'F');
+//            die;
             
             $this->a4_report_generate_2($report_data['id']);
             $this->session->set_flashdata('warn','The report data generated.');
@@ -1184,7 +1184,7 @@ EOF;
 
 //            echo '<pre>';            print_r($report_data); die;
 
-$html3 = "Verify this report at www.berberyngemlab.com <br> or <b>scan QR code</b>";
+$html3 = "Verify this report at ".WEB_URL." <br> or <b>scan QR code</b>";
 if($bg==true){ 
     // $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],194.5,12.3	5,32,''); 
 }

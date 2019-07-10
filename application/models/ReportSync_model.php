@@ -129,7 +129,7 @@ class ReportSync_model extends CI_Model
   
     public function postToRemoteServer($post_sub_array=array('fahry'=>1991))
     {
-        $this->url = REPORT_VER_URL;
+        $this->url = REPORT_SYNC_URL;
         $this->curl->create($this->url);
         
         $encrypted_post_data = mc_encrypt($post_sub_array, ENCRYPTION_KEY);

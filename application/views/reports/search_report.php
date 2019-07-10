@@ -69,7 +69,7 @@ $(document).ready(function(){
                             <div class="panel panel-default">
                                 <div class="panel-heading ui-draggable-handle">
                                     <h3 class="panel-title"><strong>Search</strong> Lab Reports</h3>
-                                    <a href="<?php echo base_url('Reports/add');?>" class="pull-right btn btn-default"><span class="fa fa-plus"></span> Add New Report</a>
+                                    <a href="<?php echo base_url($this->router->fetch_class().'/add');?>" class="pull-right btn btn-default"><span class="fa fa-plus"></span> Add New Report</a>
                                 </div>
                                 
                                 <div class="panel-body">                                                                        
