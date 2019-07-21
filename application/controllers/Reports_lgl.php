@@ -427,7 +427,7 @@ class Reports_lgl extends CI_Controller {
             }
             $color_dist_htm = ($report_data['show_color_distribution']==1)?$color_type_htm:$appendix_htm;
             
-            $qr_path = base_url().LAB_REPORT_IMAGES.$report_data['report_no'].'/qr2.png';
+            $qr_path = base_url().LAB_REPORT_IMAGES.$report_data['report_no'].'/qr.png';
             //load library
             $this->load->library('Pdf');
             $pdf = new Pdf('L', 'mm', array('85.6','54'), true, 'UTF-8', false);
@@ -436,34 +436,34 @@ class Reports_lgl extends CI_Controller {
             $pdf->setPrintHeader(false);  // remove default header 
             $pdf->setPrintFooter(false);  // remove default footer 
             $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);// set default monospaced font
-            $pdf->SetMargins(10, 15, 10); // set margins
-            $pdf->SetAutoPageBreak(TRUE, 0); // set auto page breaks
+            $pdf->SetMargins(10, 1, 10); // set margins
+            $pdf->SetAutoPageBreak(FALSE, 0); // set auto page breaks
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);// set image scale factor
                     
             // ---------------------------------------------------------
             $pdf->SetDisplayMode('fullpage', 'SinglePage', 'UseNone');
-            $pdf->AddPage('L',array('85.6','54'));
-            
+            $pdf->AddPage('L',array('86','54'));
+                    
             //set bg color blue
-            $pdf->Rect(0, 0, $pdf->getPageWidth(),    $pdf->getPageHeight(), 'DF', array('all' => array('width' => 0)),  array(33, 78, 137));
+//            $pdf->Rect(0, 0, $pdf->getPageWidth(),    $pdf->getPageHeight(), 'DF', array('all' => array('width' => 0)),  array(33, 78, 137));
 //            $pdf->Line(1, 1, 85, 1);
 //            $pdf->Line(1, 1, 1, 53);
             
             $html1 = '
                     <table border="0">
                         <tr>
-                            <td width="75%">
-                                <table style="padding-left:3px;color:white;line-height:15px;">
+                            <td width="80%">
+                                <table border="0" style="padding-left:3px;color:black;line-height:13px;">
                                      <tr><td colspan="3" style="font-size:3px;"></td></tr>
                                     <tr style="font-weight: bold;">
-                                        <td width="30%">Date</td>
+                                        <td width="35%">Date</td>
                                         <td width="5%">:</td>
-                                        <td width="78%">'.date("dS M Y",strtotime($report_data['report_date'])).'</td>
+                                        <td width="73%">'.date("d M Y",strtotime($report_data['report_date'])).'</td>
                                     </tr>
                                     <tr style="font-weight: bold;">
-                                        <td width="30%">Report No</td>
-                                        <td width="5%">:</td>
-                                        <td width="78%">'.$report_data['report_no'].'</td>
+                                        <td>Report No</td>
+                                        <td>:</td>
+                                        <td>'.$report_data['report_no'].'</td>
                                     </tr>
                                      <tr><td colspan="3" style="font-size:3px;"></td></tr>
                                      <tr>
@@ -474,7 +474,7 @@ class Reports_lgl extends CI_Controller {
                                      <tr>
                                         <td>Color </td>
                                         <td>:</td>
-                                        <td>'.$report_data['color'].'</td>
+                                        <td>'.$report_data['color_distribution_val'].'</td>
                                     </tr>
                                      <tr>
                                         <td>Shape</td>
@@ -491,11 +491,16 @@ class Reports_lgl extends CI_Controller {
                                         <td>:</td>
                                         <td>'.($report_data['variety_val']).'</td>
                                     </tr>
+                                     <tr>
+                                        <td>Comments </td>
+                                        <td>:</td>
+                                        <td>'.($report_data['comments']).'</td>
+                                    </tr>
                                     '.$color_dist_htm.'
                                 </table>
                             </td>
 
-                            <td align="center" width="25%">
+                            <td align="center" width="20%">
                                 <table>
                                     <tr><td></td></tr> 
                                     <tr><td height="5px;"></td></tr>
@@ -509,30 +514,33 @@ class Reports_lgl extends CI_Controller {
                 $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/HTOWERT.TTF', 'TrueTypeUnicode', '', 96);
                 // use the font
                 $pdf->SetFont($fontname, '', 15.5, '', false);
-                $htm1_headerTexts = '<p style="font-size:10.5px; color:white;"><b>GEMSTONE BRIEF REPORT</b></p>'; 
-                $pdf->writeHTMLCell(85.6, 1, 30,8,$htm1_headerTexts); 
+                $htm1_headerTexts = '<p style="font-size:9px; color:black;"><b>GEMSTONE BRIEF REPORT</b></p>'; 
+                $pdf->writeHTMLCell(85.6, 1, 37,8.5,$htm1_headerTexts); 
                 
                 $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/himalaya.ttf', 'TrueTypeUnicode', '', 96);
-                $pdf->SetFont($fontname,'',12);  // set font 
+                $pdf->SetFont($fontname,'',14);  // set font 
                 $pdf->SetFillColor(255,355,255);
                 /* $pdf->writeHTMLCell(45, 17, 20, 0, '',0,0,TRUE); */
 
-                $pdf->writeHTMLCell(85, 37, 0, 17, $html1); 
+                $pdf->writeHTMLCell(85, 37, 0, 18.5, $html1); 
                 
                 
                 
                 
+                $htm1_headerTexts = '<p style="font-size:22px; color:black;"><b>LONDON GEM LAB</b></p>'; 
+                $pdf->writeHTMLCell(85.6, 1, 36,2,$htm1_headerTexts); 
                 //logo lines  
-                $pdf->Rect(0, 6.25, 85.6,0.25 , 'DF', array('all' => array('width' => 0)),  array(255, 255, 255));
-                $pdf->Image(base_url().'storage/images/company/lgl_header_logo.png',5.5,2.5,14.5,12.5,'PNG'); 
+                $pdf->Rect(0, 7.6, 86,0.45 , 'DF', array('all' => array('width' => 0,'color' => array(25, 51, 100))), array(25, 51, 100));
+//                $pdf->Rect(0, 7.6, 86,0.25 , 'DF', array('all' => array('width' => 0)),  array(255, 255, 255));
+                $pdf->Image(base_url().'storage/images/company/lgl_header_logo.png',5.5,2.5,20,17,'PNG'); 
                 //QR corner
 //                $pdf->Image($qr_path,72,41,11,11,'PNG'); 
                 //QR default
-                $pdf->Image($qr_path,63.5,38,15,15,'PNG'); 
+                $pdf->Image($qr_path,67.5,37,15,15,'PNG'); 
                 
                 //stone pic default
-                $pdf->Rect(61, 16.5, 20,20 , 'DF', array('all' => array('width' => 0.5,'color' => array(25, 51, 100))),  array(33, 78, 137));
-                $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],63,18.5,16,16); 
+                $pdf->Rect(66.75, 18.25, 16.5,16.5, 'DF', array('all' => array('width' => 0.5,'color' => array(25, 51, 100))),  array(255, 255, 255));
+                $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],67,18.5,16,16); 
 
                     
                     //Close and output PDF document
@@ -543,6 +551,7 @@ class Reports_lgl extends CI_Controller {
                 }
 //                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'I'); 
                     $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'F');
+//                    die;
 //                    echo '<pre>';                    print_r($pdf_output); die;
                     $this->session->set_flashdata('warn','The PVC report data generated.');
 
