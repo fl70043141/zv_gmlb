@@ -644,7 +644,7 @@ class Reports_lgl extends CI_Controller {
                                 <td height="160px"></td>
                             </tr>
                             <tr>
-                                <td height="30px" colspan="2" style="letter-spacing:3px;text-align:center;font-size:15px;"><b>Remarks</b></td>
+                                <td height="30px" colspan="2" style="letter-spacing:3px;text-align:center;font-size:15px;"><b></b></td>
                             </tr>  
 							<tr>
                                 <td height="20px" colspan="2" style="letter-spacing:0.5px;line-height:0px;text-align:center;font-size:13px;">'.$report_data['comments'].'</td>

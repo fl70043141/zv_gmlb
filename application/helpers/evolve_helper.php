@@ -69,7 +69,7 @@ if ( ! function_exists('get_autoincrement_no'))
 if ( ! function_exists('gen_id'))
 {
 // generate id
-    function gen_id($prefix='', $table='', $column='', $pad_amount=7, $pad_sym='0')
+    function gen_id($prefix='', $table='', $column='', $pad_amount=5, $pad_sym='0')
     {
         return $id = $prefix.str_pad(generate_serial($table, $column), $pad_amount, $pad_sym, STR_PAD_LEFT);
     }
