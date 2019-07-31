@@ -31,7 +31,9 @@ define('SYS_DATE_FORMAT', 'm/d/Y');
 define('SYS_EXP', '2019-06-30 23:58'); //jewelry only ->1
 
 
-define('REPORT_VER_URL', 'http://localhost/lgl_reports/report_sync/index.php/BglSync/');
+define('REPORT_SYNC_URL', 'http://localhost/lgl_reports/report_sync/index.php/BglSync/');
+define('REPORT_VER_URL', 'http://localhost/lgl_reports/');
+define('WEB_URL', 'http://localhost/zv_gemlab/');
 /*
 |--------------------------------------------------------------------------
 | File and Directory Modes
