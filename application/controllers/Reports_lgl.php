@@ -667,7 +667,7 @@ class Reports_lgl extends CI_Controller {
                                 <td colspan="2" height="0px"></td>
                             </tr>
                             <tr>
-                                <td width="96%" height="30px"  style="letter-spacing:0px;text-align:center;font-size:20px;">Remarks</td>
+                                <td width="96%" height="40px"  style="letter-spacing:0px;text-align:center;font-size:20px;"></td>
                                 <td width="4%" ></td>
                             </tr>  
                             <tr>
@@ -732,9 +732,9 @@ class Reports_lgl extends CI_Controller {
             // set font
             $pdf->SetFont('helvetica');  
 
-            // $pdf->AddPage('L', 'A4');
+             $pdf->AddPage('L', 'A4');
 			
-            $pdf->AddPage('L',array('210','215'));
+//            $pdf->AddPage('L',array('210','215'));
             
 //            $pdf->Image(COMPANY_LOGO.'report-test.jpg',0,0,'215','215');  //Temp bg
                     
@@ -745,7 +745,7 @@ $html = '
 <!-- EXAMPLE OF CSS STYLE -->
 <style>
    #report_content, th, td {
-    font-size:15.5px;
+    font-size:13px;
     height: 17px; 
     line-height: 25px;
 }
@@ -755,7 +755,7 @@ $html = '
 
 <table  class="first" border="0" cellpadding="0" cellspacing="6">
         <tr>
-            <td width="50%">
+            <td width="45%">
                     <table border="0">
                         <tr><td  height="165px"  align="center"> 
                               <!--  <img style="width:250px; size:100%" src="$logo_path"> -->
@@ -770,50 +770,50 @@ $html = '
                                         <td colspan="3"></td>
                                     </tr>
                                     <tr>
-                                        <td width="26%" align="left">Date </td>
+                                        <td width="26%" align="left"><b>Date</b> </td>
                                         <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['report_date'].'</td>
                                     </tr>
                                     <tr>
-                                        <td width="26%" align="left">Report No </td>
+                                        <td width="26%" align="left"><b>Report No </b></td>
                                         <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['report_no'].'</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="26%" align="left">Ref No </td>
-                                        <td width="5%" align="center">:</td>
-                                        <td width="78%">'.$report_data['report_no'].'</td>
-                                    </tr>
+                                    </tr> 
                                     <tr>
                                         <td colspan="3"></td>
                                     </tr>
                                     <tr>
-                                        <td width="26%" align="left">Weight </td>
+                                        <td width="26%" align="left"><b>Item </b></td>
+                                        <td width="5%" align="center">:</td>
+                                        <td width="78%">'.$report_data['identification_val'].'</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="26%" align="left"><b>Weight </b></td>
                                         <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['weight'].' ct</td>
                                     </tr>
                                     <tr>
-                                        <td width="26%" align="left">Color </td>
+                                        <td width="26%" align="left"><b>Color </b></td>
                                         <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['color'].'</td>
                                     </tr>
                                     <tr>
-                                        <td width="26%" align="left">Shape </td>
+                                        <td width="26%" align="left"><b>Shape </b></td>
                                         <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['shape_val'].'</td>
                                     </tr>
                                     <tr>
-                                        <td width="26%" align="left">Cut </td>
+                                        <td width="26%" align="left"><b>Cut </b></td>
                                         <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['cut_val'].'</td>
                                     </tr> 
                                     <tr>
-                                        <td width="26%" align="left">Dimension </td>
+                                        <td width="26%" align="left"><b>Dimension </b></td>
                                         <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['dimension'].' mm</td>
                                     </tr>
                                     <tr>
-                                        <td width="26%" align="left">Transperancy </td>
+                                        <td width="26%" align="left"><b>Transperancy </b></td>
                                         <td width="5%" align="center">:</td>
                                         <td width="78%">'.$report_data['transparency'].'</td>
                                     </tr>
@@ -824,14 +824,14 @@ $html = '
                                         <td colspan="3"><b>Conclusion</b></td>
                                     </tr>
                                     <tr>
-                                        <td width="26%" align="left">Species </td>
+                                        <td width="26%" align="left"><b>Variety </b></td>
                                         <td width="5%" align="center">:</td>
-                                        <td width="78%">'.$report_data['object_val'].'</td>
+                                        <td width="78%"><b>'.$report_data['variety_val'].'</b></td>
                                     </tr> 
                                     <tr>
-                                        <td width="26%" align="left">Variety </td>
+                                        <td width="26%" align="left"><b>Species</b> </td>
                                         <td width="5%" align="center">:</td>
-                                        <td width="78%">'.$report_data['variety_val'].'</td>
+                                        <td width="78%"><b>'.$report_data['object_val'].'</b></td>
                                     </tr> 
                                     
                                     <tr>
@@ -884,11 +884,18 @@ $html3 = "Scan the QR & verify this report here.";
 if($bg==true){ 
     $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],205,13,33,''); 
 }
+
+// $pdf->Line(295, 0, 295, 250);
+// $pdf->Line(100, 0, 100, 250);
+// $pdf->Line(195, 0, 195, 250);
 // output the HTML content
-$pdf->writeHTMLCell(215, 160, 2, 0, $html);
-$pdf->writeHTMLCell(138, 10, 7, 182, $html2);
+
+$fontname = TCPDF_FONTS::addTTFfont('storage/fonts/source-sans-pro.bold-italic.ttf', 'TrueTypeUnicode', '', 96);
+$pdf->SetFont($fontname,'',14);  // set font 
+$pdf->writeHTMLCell(215, 160, 98, 0, $html);
+$pdf->writeHTMLCell(138, 10, 102, 182, $html2);
 $pdf->SetFontSize(10.5);
-$pdf->writeHTMLCell(138, 10, 33,190, $html3); 
+$pdf->writeHTMLCell(138, 10, 128,190, $html3); 
 //$pdf->Image(LAB_REPORT_IMAGES.'../other/arrow.png',153,65,18,''); 
 
 $report_path = ($bg==true)?LAB_E_REPORT_PDF:LAB_REPORT_PDF;
@@ -899,8 +906,9 @@ $report_path = ($bg==true)?LAB_E_REPORT_PDF:LAB_REPORT_PDF;
                 rename(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', BASEPATH.'.'.LAB_REPORT_PDF_TRASH.$report_data['report_no'].'_'.time().'.pdf'); 
 //                unlink(BASEPATH.'.'.LAB_REPORT_PDF.$report_data['report_no'].'.pdf');
             } 
-            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'F');
-//            die;
+//            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'F');
+            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'I');
+            die;
             
             $this->a4_report_generate_2($report_data['id']);
             $this->session->set_flashdata('warn','The report data generated.');
