@@ -17,6 +17,7 @@ class User_model extends CI_Model
                 $this->db->like('email', $data['email']); 
                 $this->db->where("(first_name like '%".$data['user_name']."%' OR last_name like '%".$data['user_name']."%')"); 
                } 
+               $this->db->where('u.id!=1');
             $result = $this->db->get()->result_array(); 
 //            echo $this->db->last_query();
             return $result;
