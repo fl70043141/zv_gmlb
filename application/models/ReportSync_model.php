@@ -132,7 +132,9 @@ class ReportSync_model extends CI_Model
         $this->url = REPORT_SYNC_URL;
         $this->curl->create($this->url);
         
+        $post_sub_array = json_encode($post_sub_array);
         $encrypted_post_data = mc_encrypt($post_sub_array, ENCRYPTION_KEY);
+//        echo '<pre>';        print_r($encrypted_post_data);die;
         //data serialize
         $post_data = array('post_data' => serialize($encrypted_post_data));
 //        echo '<pre>';        print_r($post_data);die;
