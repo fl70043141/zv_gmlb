@@ -191,6 +191,8 @@ class Reports_lgl extends CI_Controller {
             $params['size'] = 10;
             if($qr_name!='qr')
                 $params['black'] = array(33,78,137);
+            else
+                $params['black'] = array(64,64,64);
 //            $params['white'] = array(255,255,255);
             $params['savename'] = LAB_REPORT_IMAGES.$report_no.'/'.$qr_name.'.png';
             $this->ciqrcode->generate($params);
@@ -748,7 +750,7 @@ $html = '
    #report_content, th, td {
     font-size:13px;
     height: 17px; 
-    line-height: 25px;
+    line-height: 25px; 
 }
 </style>
  
@@ -891,9 +893,11 @@ if($bg==true){
 // $pdf->Line(195, 0, 195, 250);
 // output the HTML content
 
-$fontname = TCPDF_FONTS::addTTFfont('storage/fonts/source-sans-pro.bold-italic.ttf', 'TrueTypeUnicode', '', 96);
+$pdf->SetTextColor(64,64,64);
+$fontname = TCPDF_FONTS::addTTFfont('storage/fonts/lgl/SourceSansPro-Regular.ttf', 'TrueTypeUnicode', '', 96);
 $pdf->SetFont($fontname,'',14);  // set font 
 $pdf->writeHTMLCell(215, 160, 98, 0, $html);
+
 $pdf->writeHTMLCell(138, 10, 102, 182, $html2);
 $pdf->SetFontSize(10.5);
 $pdf->writeHTMLCell(138, 10, 128,190, $html3); 
