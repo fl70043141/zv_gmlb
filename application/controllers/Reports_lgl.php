@@ -281,9 +281,10 @@ class Reports_lgl extends CI_Controller {
             if($pic_upload_3!=''){
                 $data['pic3'] = $pic_upload_3;
             } 
-
+//            echo '<pre>';            print_r($inputs); die;
             $edit_stat = $this->Report_model->edit_report($inputs['id'],$data);
             if($edit_stat){
+//            echo '<pre>';            print_r($inputs); die;
                 $this->Report_model->edit_report($inputs['id'],array('sync_required' => $inputs['sync_required']));
                 $this->session->set_flashdata('warn',RECORD_UPDATE);
                 redirect('reports_lgl/edit/'.$inputs['id']);
@@ -785,7 +786,7 @@ $html = '
                                     <tr>
                                         <td width="26%" align="left"><b>Item </b></td>
                                         <td width="5%" align="center">:</td>
-                                        <td width="78%">'.$report_data['identification_val'].'</td>
+                                        <td width="78%">'.$report_data['object_val'].'</td>
                                     </tr>
                                     <tr>
                                         <td width="26%" align="left"><b>Weight </b></td>
@@ -831,7 +832,7 @@ $html = '
                                     <tr>
                                         <td width="26%" align="left"><b>Species</b> </td>
                                         <td width="5%" align="center">:</td>
-                                        <td width="78%"><b>'.$report_data['object_val'].'</b></td>
+                                        <td width="78%"><b>'.$report_data['identification_val'].'</b></td>
                                     </tr> 
                                     
                                     <tr>
