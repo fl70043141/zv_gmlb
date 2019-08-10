@@ -814,7 +814,7 @@ $html = '
                                         <td colspan="3"></td>
                                     </tr> 
                                     <tr>
-                                        <td colspan="3"><b>Conclusion</b></td>
+                                        <td colspan="3" style="font-weight: bold;"> Conclusion </td>
                                     </tr>
                                     <tr>
                                         <td width="26%" align="left"><b>Variety </b></td>
