@@ -542,9 +542,9 @@ class Reports_lgl extends CI_Controller {
 //                    rename(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'.pdf', BASEPATH.'.'.LAB_REPORT_PVC_PDF_TRASH.$report_data['report_no'].'_'.time().'.pdf'); 
     //                unlink(BASEPATH.'.'.LAB_REPORT_PDF.$report_data['report_no'].'.pdf');
                 }
-                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'I'); 
-//                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'F');
-                    die;
+//                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'I'); 
+                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'F');
+//                    die;
 //                    echo '<pre>';                    print_r($pdf_output); die;
                     $this->session->set_flashdata('warn','The PVC report data generated.');
 
@@ -901,9 +901,9 @@ $report_path = ($bg==true)?LAB_E_REPORT_PDF:LAB_REPORT_PDF;
                 rename(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', BASEPATH.'.'.LAB_REPORT_PDF_TRASH.$report_data['report_no'].'_'.time().'.pdf'); 
 //                unlink(BASEPATH.'.'.LAB_REPORT_PDF.$report_data['report_no'].'.pdf');
             } 
-            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'F');
-//            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'I');
-//            die;
+//            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'F');
+            $pdf_output = $pdf->Output(BASEPATH.'.'.$report_path.$report_data['report_no'].'.pdf', 'I');
+            die;
             
             $this->a4_report_generate_2($report_data['id']);
             $this->session->set_flashdata('warn','The report data generated.');
