@@ -453,13 +453,13 @@ class Reports_lgl extends CI_Controller {
             $html1 = '
                     <table border="0">
                         <tr>
-                            <td width="80%">
-                                <table border="0" style="padding-left:3px;color:black;line-height:13px;">
+                            <td width="98%">
+                                <table border="0" style="padding-left:0px;color:black;line-height:13px;width:207px;">
                                      <tr><td colspan="3" style="font-size:3px;"></td></tr>
                                     <tr style="font-weight: bold;">
-                                        <td width="35%">Date</td>
+                                        <td width="32%">Date</td>
                                         <td width="5%">:</td>
-                                        <td width="73%">'.date("d M Y",strtotime($report_data['report_date'])).'</td>
+                                        <td width="75%">'.date("d M Y",strtotime($report_data['report_date'])).'</td>
                                     </tr>
                                     <tr style="font-weight: bold;">
                                         <td>Report No</td>
@@ -500,15 +500,7 @@ class Reports_lgl extends CI_Controller {
                                     '.$color_dist_htm.'
                                 </table>
                             </td>
-
-                            <td align="center" width="20%">
-                                <table>
-                                    <tr><td></td></tr> 
-                                    <tr><td height="5px;"></td></tr>
-                                     <tr><td height="5px;"></td></tr>
-                                
-                                </table>
-                            </td>
+ 
                         </tr>
                     </table>';
             
@@ -523,7 +515,7 @@ class Reports_lgl extends CI_Controller {
                 $pdf->SetFillColor(255,355,255);
                 /* $pdf->writeHTMLCell(45, 17, 20, 0, '',0,0,TRUE); */
 
-                $pdf->writeHTMLCell(85, 37, 0, 18.5, $html1); 
+                $pdf->writeHTMLCell(68, 37, 0, 18.5, $html1); 
                 
                 
                 
