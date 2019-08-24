@@ -375,6 +375,7 @@ class Reports_lgl extends CI_Controller {
 	}
                                         
         function test(){
+            $this->a4_report_generate(3); die;
                 $parent_id = $this->input->post('idnfcn_id');
                 $this->db->select("dropdown_value, id");	
 				$this->db->from(DROPDOWN_LIST);	 
@@ -468,7 +469,7 @@ class Reports_lgl extends CI_Controller {
                                     </tr>
                                      <tr><td colspan="3" style="font-size:3px;"></td></tr>
                                      <tr>
-                                        <td>Weight </td>
+                                        <td class="bld_td">Weight </td>
                                         <td>:</td>
                                         <td>'.$report_data['weight'].' carat</td>
                                     </tr>
@@ -502,7 +503,7 @@ class Reports_lgl extends CI_Controller {
                             </td>
  
                         </tr>
-                    </table>';
+                    </table> ';
             
                 $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/HTOWERT.TTF', 'TrueTypeUnicode', '', 96);
                 // use the font
@@ -747,6 +748,15 @@ $html = '
     font-size:13px;
     height: 17px; 
     line-height: 25px; 
+}
+@font-face {
+
+   font-family: "SourceSansProB" ;
+   src: url("storage/fonts/lgl/SourceSansPro-Bold.ttf") format("truetype");
+
+}
+b {
+    font-family: "SourceSansProB", extra_settings;
 }
 </style>
  
