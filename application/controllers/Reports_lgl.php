@@ -536,15 +536,21 @@ class Reports_lgl extends CI_Controller {
                 $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],67,18.5,16,16); 
 
                     
+                //backside of the card 
+                $pdf->AddPage('L',array('86','54'));
+                $pdf->Image(base_url().'storage/images/other/ID_card2.png',0,0,86,54,'PNG'); 
+                
+                
                     //Close and output PDF document
                 if (file_exists(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'.pdf')){
                     //move existing file before generated new one
 //                    rename(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'.pdf', BASEPATH.'.'.LAB_REPORT_PVC_PDF_TRASH.$report_data['report_no'].'_'.time().'.pdf'); 
     //                unlink(BASEPATH.'.'.LAB_REPORT_PDF.$report_data['report_no'].'.pdf');
                 }
-//                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'I'); 
-                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'F');
-//                    die;
+                
+                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'I'); 
+//                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'F');
+                    die;
 //                    echo '<pre>';                    print_r($pdf_output); die;
                     $this->session->set_flashdata('warn','The PVC report data generated.');
 
