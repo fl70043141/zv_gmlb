@@ -457,9 +457,9 @@ class Reports_lgl extends CI_Controller {
                                 <table border="0" style="padding-left:0px;color:black;line-height:13px;width:207px;">
                                      <tr><td colspan="3" style="font-size:3px;"></td></tr>
                                     <tr style="font-weight: bold;">
-                                        <td width="32%">Date</td>
+                                        <td width="31%">Date</td>
                                         <td width="5%">:</td>
-                                        <td width="75%">'.date("d M Y",strtotime($report_data['report_date'])).'</td>
+                                        <td width="74%">'.date("d M Y",strtotime($report_data['report_date'])).'</td>
                                     </tr>
                                     <tr style="font-weight: bold;">
                                         <td>Report No</td>
@@ -515,7 +515,7 @@ class Reports_lgl extends CI_Controller {
                 $pdf->SetFillColor(255,355,255);
                 /* $pdf->writeHTMLCell(45, 17, 20, 0, '',0,0,TRUE); */
 
-                $pdf->writeHTMLCell(68, 37, 0, 18.5, $html1); 
+                $pdf->writeHTMLCell(68, 37, -0.5, 18.5, $html1); 
                 
                 
                 
@@ -536,7 +536,7 @@ class Reports_lgl extends CI_Controller {
                 $pdf->Image(LAB_REPORT_IMAGES.$report_data['report_no'].'/'.$report_data['pic1'],67,18.5,16,16); 
 
                     
-                //backside of the card 
+               // backside of the card 
                 $pdf->AddPage('L',array('86','54'));
                 $pdf->Image(base_url().'storage/images/other/ID_card2.png',0,0,86,54,'PNG'); 
                 
