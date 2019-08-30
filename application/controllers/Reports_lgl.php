@@ -488,13 +488,13 @@ class Reports_lgl extends CI_Controller {
                                         <td>:</td>
                                         <td>'.$report_data['dimension'].' mm</td>
                                     </tr>
-                                     <tr>
+                                     <tr  class="fl_bold">
                                         <td>Identification </td>
                                         <td>:</td>
                                         <td>'.($report_data['variety_val']).'</td>
                                     </tr>
-                                     <tr>
-                                        <td>Comments </td>
+                                     <tr class="fl_bold">
+                                        <td >Comments </td>
                                         <td>:</td>
                                         <td>'.($report_data['comments']).'</td>
                                     </tr>
@@ -503,7 +503,20 @@ class Reports_lgl extends CI_Controller {
                             </td>
  
                         </tr>
-                    </table> ';
+                    </table> 
+                    <style>
+                        @font-face {
+
+                           font-family: "ArialBold" ;
+                           src: url("storage/fonts/lgl/SourceSansPro-Bold.ttf") format("truetype");
+
+                        }
+                        .fl_bold {
+                            font-family: "Times New Roman Bold", Times, serif;
+                            font-size: 11px;line-height:13px;
+                        }
+                    </style>
+                    ';
             
                 $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/HTOWERT.TTF', 'TrueTypeUnicode', '', 96);
                 // use the font
@@ -549,9 +562,9 @@ class Reports_lgl extends CI_Controller {
     //                unlink(BASEPATH.'.'.LAB_REPORT_PDF.$report_data['report_no'].'.pdf');
                 }
                 
-//                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'I'); 
-                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'F');
-//                    die;
+                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'I'); 
+//                    $pdf_output = $pdf->Output(BASEPATH.'.'.LAB_REPORT_PVC_PDF.$report_data['report_no'].'_pvc.pdf', 'F');
+                    die;
 //                    echo '<pre>';                    print_r($pdf_output); die;
                     $this->session->set_flashdata('warn','The PVC report data generated.');
 
