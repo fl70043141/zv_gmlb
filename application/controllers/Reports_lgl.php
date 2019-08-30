@@ -476,7 +476,7 @@ class Reports_lgl extends CI_Controller {
                                      <tr>
                                         <td>Color </td>
                                         <td>:</td>
-                                        <td>'.$report_data['color_distribution_val'].'</td>
+                                        <td>'.$report_data['color'].'</td>
                                     </tr>
                                      <tr>
                                         <td>Shape</td>
@@ -516,7 +516,7 @@ class Reports_lgl extends CI_Controller {
                 $pdf->SetFillColor(255,355,255);
                 /* $pdf->writeHTMLCell(45, 17, 20, 0, '',0,0,TRUE); */
 
-                $pdf->writeHTMLCell(68, 37, -0.5, 18.5, $html1); 
+                $pdf->writeHTMLCell(68, 37, 0.5, 18.5, $html1); 
                 
                 
                 
@@ -538,8 +538,8 @@ class Reports_lgl extends CI_Controller {
 
                     
                // backside of the card 
-                $pdf->AddPage('L',array('86','54'));
-                $pdf->Image(base_url().'storage/images/other/ID_card2.png',0,0,86,54,'PNG'); 
+               // $pdf->AddPage('L',array('86','54'));
+               // $pdf->Image(base_url().'storage/images/other/ID_card2.png',0,0,86,54,'PNG'); 
                 
                 
                     //Close and output PDF document
